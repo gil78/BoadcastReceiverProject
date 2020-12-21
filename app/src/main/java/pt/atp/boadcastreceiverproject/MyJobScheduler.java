@@ -3,41 +3,28 @@ package pt.atp.boadcastreceiverproject;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.job.JobInfo;
-import android.app.job.JobScheduler;
+import android.app.job.JobParameters;
+import android.app.job.JobService;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
-import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
-public class BootReceiver extends BroadcastReceiver {
+public class MyJobScheduler extends JobService {
 
-    private static final int NOTIFICATION_TOKEN = 100;
-    private static final int MY_BACKGROUND_JOB = 1;
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
     @Override
-    public void onReceive(Context context, Intent intent) {
-        Log.w("BOOT","BOOT");
-        Toast.makeText(context,"Project: Boot Completed", Toast.LENGTH_LONG).show();
+    public boolean onStartJob(JobParameters jobParameters) {
+        createNotification(getApplicationContext());
+        return false;
+    }
 
-        //Não esquecer de criar a permissao no manifest
-       // createNotification(context);
-
-        //JobScheduler
-        JobScheduler js = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
-        JobInfo job = new JobInfo.Builder(
-                MY_BACKGROUND_JOB,
-                new ComponentName(context, MyJobScheduler.class))
-                .build();
-        js.schedule(job);
-
+    @Override
+    public boolean onStopJob(JobParameters jobParameters) {
+        return false;
     }
 
     private void createNotification(Context context){
@@ -68,6 +55,4 @@ public class BootReceiver extends BroadcastReceiver {
 // notificationId is a unique int for each notification that you must define
         notificationManager.notify(1, builder.build());
     }
-
-
 }
