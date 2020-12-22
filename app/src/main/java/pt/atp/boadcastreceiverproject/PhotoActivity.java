@@ -48,6 +48,7 @@ public class PhotoActivity extends AppCompatActivity {
             ((ImageView)findViewById(R.id.imgPhoto)).setImageBitmap(imageBitmap);
         }
         super.onActivityResult(requestCode, resultCode, data);
+
     }
 
     private boolean permissionGranted(){
