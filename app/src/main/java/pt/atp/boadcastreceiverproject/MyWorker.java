@@ -3,19 +3,28 @@ package pt.atp.boadcastreceiverproject;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.job.JobParameters;
-import android.app.job.JobService;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.JobIntentService;
 import androidx.core.app.NotificationCompat;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
-public class MyJobScheduler extends JobIntentService {
+public class MyWorker extends Worker{
 
+    public MyWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
+    }
+
+    @NonNull
+    @Override
+    public Result doWork() {
+ 
+        createNotification(getApplicationContext());
+        return Result.success();
+    }
 
     private void createNotification(Context context){
         Intent intent = new Intent(context, PhotoActivity.class);
@@ -46,8 +55,4 @@ public class MyJobScheduler extends JobIntentService {
         notificationManager.notify(1, builder.build());
     }
 
-    @Override
-    protected void onHandleWork(@NonNull Intent intent) {
-        createNotification(getApplicationContext());
-    }
 }

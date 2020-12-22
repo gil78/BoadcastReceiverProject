@@ -14,7 +14,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.app.JobIntentService;
 import androidx.core.app.NotificationCompat;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 public class BootReceiver extends BroadcastReceiver {
 
@@ -24,19 +28,27 @@ public class BootReceiver extends BroadcastReceiver {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onReceive(Context context, Intent intent) {
+
         Log.w("BOOT","BOOT");
         Toast.makeText(context,"Project: Boot Completed", Toast.LENGTH_LONG).show();
 
         //Não esquecer de criar a permissao no manifest
        // createNotification(context);
 
+
         //JobScheduler
-        JobScheduler js = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
+       /*JobScheduler js = (JobScheduler) context.getSystemService(Context.JOB_SCHEDULER_SERVICE);
         JobInfo job = new JobInfo.Builder(
                 MY_BACKGROUND_JOB,
                 new ComponentName(context, MyJobScheduler.class))
                 .build();
-        js.schedule(job);
+        js.schedule(job);*/
+
+        //JobIntentService
+       /** JobIntentService.enqueueWork(context,MyJobScheduler.class,1,new Intent());**/
+
+        WorkRequest myWork = new OneTimeWorkRequest.Builder(MyWorker.class).build();
+        WorkManager.getInstance(context).enqueue(myWork);
 
     }
 
